@@ -2,7 +2,8 @@
  * @file Main entry point for the Luck minigame.
  */
 import React, { useEffect, useState } from "react";
-import { E, ESource } from "emath.js";
+import type { DecimalSource } from "emath.js";
+import { Decimal } from "emath.js";
 import { Rarity } from "./rarity";
 import Form from "react-bootstrap/Form";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
@@ -13,30 +14,30 @@ import Info from "./info";
  * The main component for the Luck minigame.
  * @returns The rendered component.
  */
-function LuckMain () {
+const LuckMain: React.FC = () => {
     const [rarity, setRarity] = useState<Rarity>();
     const [tempRarity, setTempRarity] = useState<Rarity>();
     const [rolls, setRolls] = useState<number>(0);
-    const [effectiveRolls, setEffectiveRolls] = useState<E>(E(0));
-    const roll = (luck: ESource = 1, loop = false) => {
-        luck = E(luck);
+    const [effectiveRolls, setEffectiveRolls] = useState<Decimal>(new Decimal(0));
+    const roll = (luck: DecimalSource = 1, loop = false): void => {
+        luck = new Decimal(luck);
         if (loop) {
-            let maxTempRarity = new Rarity(E(0));
+            let maxTempRarity = new Rarity(new Decimal(0));
             for (let i = 0; i < luck.toNumber(); i++) {
                 // console.log(i);
                 // setRolls(rolls + 1);
                 // setEffectiveRolls(effectiveRolls.add(1));
-                // setTempRarity(new Rarity(E(1)));
+                // setTempRarity(new Rarity(new Decimal(1)));
                 // if (!rarity || tempRarity?.rng.gt(rarity.rng)) {
                 //     setRarity(tempRarity);
                 // }
 
-                const tempRarityLoop = new Rarity(E(1));
+                const tempRarityLoop = new Rarity(new Decimal(1));
                 if (tempRarityLoop.rng.gt(maxTempRarity.rng)) {
                     maxTempRarity = tempRarityLoop;
                 }
             }
-            if (!rarity || maxTempRarity?.rng.gt(rarity.rng)) {
+            if (!rarity || maxTempRarity.rng.gt(rarity.rng)) {
                 setRarity(maxTempRarity);
             }
             setRolls(rolls + luck.toNumber());
@@ -51,18 +52,18 @@ function LuckMain () {
         }
     };
     useEffect(() => {
-        (window as any).roll = roll;
+        Object.assign(window, { roll });
     }, []);
     return (
         <div>
-            <h1>Luck</h1>
+            <h3>Luck</h3>
             <Info />
             {["1", "10", "100", "1000", "10000"].map((luck) => (
-                <Button key={luck} onClick={() => roll(luck)}>Roll (multiplier) {luck}</Button>
+                <Button style={{ margin: "5px" }} key={luck} onClick={() => { roll(luck); }}>Roll (multiplier) {luck}</Button>
             ))}
             <br />
             {["1", "10", "100", "1000", "10000"].map((luck) => (
-                <Button key={luck} onClick={() => roll(luck, true)}>Roll (repeat) {luck}</Button>
+                <Button style={{ margin: "5px" }} key={luck} onClick={() => { roll(luck, true); }}>Roll (repeat) {luck}</Button>
             ))}
             <hr />
             <FloatingLabel label="Roll (luck multiplier)">
@@ -72,7 +73,7 @@ function LuckMain () {
                     placeholder="1"
                 />
             </FloatingLabel>
-            <Button onClick={() => roll(E((document.getElementById("roll-luck-multiplier") as HTMLInputElement ?? { value: 0 }).value))}>Custom Roll</Button>
+            <Button onClick={() => { roll(new Decimal((document.getElementById("roll-luck-multiplier") as HTMLInputElement | null ?? { value: 0 }).value)); }}>Custom Roll</Button>
             <hr />
             <p>Rolls: {rolls}</p>
             <p>Effective Rolls: {effectiveRolls.format()}</p>
@@ -92,6 +93,6 @@ function LuckMain () {
             )}
         </div>
     );
-}
+};
 
 export default LuckMain;

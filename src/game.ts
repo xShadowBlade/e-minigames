@@ -7,17 +7,20 @@ const Game = new GameClass({
     mode: "development",
     name: {
         id: "e-minigames",
-        title: "E-Minigames",
+        title: "Decimal-Minigames",
     },
 });
 
 if (Game.config.mode === "development") {
-    (window as any).Game = Game;
-    (async () => {
-        const eMathImport = await import("emath.js");
-        const eMathGameImport = await import("emath.js/game");
-        const eMath = Object.assign({}, eMathImport, eMathGameImport);
-        (window as any).eMath = eMath;
+    Object.assign(window, { Game });
+    void (async (): Promise<void> => {
+        const keysToLoad = {
+            eMath: await import("emath.js"),
+            eMathGame: await import("emath.js/game"),
+            eMathPresets: await import("emath.js/presets"),
+        };
+
+        Object.assign(window, keysToLoad);
     })();
 }
 

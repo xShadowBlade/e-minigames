@@ -5,31 +5,31 @@ import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
-import { E } from "emath.js";
+import { Decimal } from "emath.js";
 import { Rarity } from "./rarity";
 
-const rarityListGenerator = (rarity: string, i: number) => (
-    // <li key={rarity}>{rarity} ({i}): {Rarity.rarityFn(E(i)).format()} - {Rarity.rarityFn(E(i + 1)).format()}</li>
-    `${rarity} (${i}): ${Rarity.rarityFn(E(i)).format()} - ${Rarity.rarityFn(E(i + 1)).format()}`
+const rarityListGenerator = (rarity: string, i: number): string => (
+    // <li key={rarity}>{rarity} ({i}): {Rarity.rarityFn(new Decimal(i)).format()} - {Rarity.rarityFn(new Decimal(i + 1)).format()}</li>
+    `${rarity} (${i}): ${Rarity.rarityFn(new Decimal(i)).format()} - ${Rarity.rarityFn(new Decimal(i + 1)).format()}`
 );
 
-(window as any).rarityListGenerator = rarityListGenerator;
-(window as any).customListRarities = (start = 0, end = Rarity.rarities.length - 1) => {
+Object.assign(window, { rarityListGenerator });
+Object.assign(window, { customListRarities: (start = 0, end = Rarity.rarities.length - 1) => {
     for (let i = start; i <= end; i++) {
         console.log(rarityListGenerator(Rarity.getRarityName(i), i));
     }
-};
+} });
 
 /**
  * The main component for the info.
  * @returns The rendered component.
  */
-function Info () {
+const Info: React.FC = () => {
     const [show, setShow] = useState(false);
     return (
         <div>
-            <Button onClick={() => setShow(true)}>Show Info</Button>
-            <Modal show={show} onHide={() => setShow(false)}>
+            <Button onClick={() => { setShow(true); }}>Show Info</Button>
+            <Modal show={show} onHide={() => { setShow(false); }}>
                 <Modal.Header closeButton>
                     <Modal.Title>Info</Modal.Title>
                 </Modal.Header>
@@ -40,7 +40,7 @@ function Info () {
                     </p>
                     <ul>
                         {Rarity.rarities.map((rarity, i) => (
-                            // <li key={rarity}>{rarity} ({i}): {Rarity.rarityFn(E(i)).format()} - {Rarity.rarityFn(E(i + 1)).format()}</li>
+                            // <li key={rarity}>{rarity} ({i}): {Rarity.rarityFn(new Decimal(i)).format()} - {Rarity.rarityFn(new Decimal(i + 1)).format()}</li>
                             <li key={rarity}>{rarityListGenerator(rarity, i)}</li>
                         ))}
                     </ul>
@@ -61,6 +61,6 @@ function Info () {
             </Modal>
         </div>
     );
-}
+};
 
 export default Info;

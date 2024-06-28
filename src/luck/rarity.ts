@@ -1,8 +1,9 @@
 /**
  * @file Declares the rarity
  */
-import { Game } from "../game";
-import { E, ESource, inverseFunctionApprox, roundingBase } from "emath.js";
+// import { Game } from "../game";
+import type { DecimalSource} from "emath.js";
+import { Decimal, roundingBase } from "emath.js";
 
 class Rarity {
     /**
@@ -60,11 +61,11 @@ class Rarity {
      * @param rarity - The rarity to get the probability of. (inverse)
      * @returns The probability of getting the rarity.
      */
-    public static rarityFn (rarity: E): E {
+    public static rarityFn (rarity: Decimal): Decimal {
         // TODO: Create a better formula for this.
         // return rarity.add(1).pow(5);
-        // return E.pow(5, rarity.add(1));
-        return roundingBase(E.pow(5, rarity.div(7.5).add(1).pow(3)).sub(4), 10, 1, 1e3);
+        // return Decimal.pow(5, rarity.add(1));
+        return roundingBase(Decimal.pow(5, rarity.div(7.5).add(1).pow(3)).sub(4), 10, 1, 1e3);
     }
 
     /**
@@ -72,14 +73,14 @@ class Rarity {
      * @param probability - The probability to get the rarity of. (inverse)
      * @returns The rarity of the probability.
      */
-    public static rarityFnInverse (probability: E): E {
+    public static rarityFnInverse (probability: Decimal): Decimal {
         // return probability.root(5).sub(1);
-        // return E.log(5, probability.add(1)).sub(1);
-        // return probability.ln().div(E.ln(5));
+        // return Decimal.log(5, probability.add(1)).sub(1);
+        // return probability.ln().div(Decimal.ln(5));
         // return probability.log(5);
         // return inverseFunctionApprox(Rarity.rarityFn, probability).value.round();
         // 7.5\sqrt[3]{\frac{\ln(x+5)}{\ln(5)}}-7.5
-        return E(7.5).mul(probability.add(5).ln().div(E.ln(5)).root(3)).sub(7.5).floor();
+        return new Decimal(7.5).mul(probability.add(5).ln().div(Decimal.ln(5)).root(3)).sub(7.5).floor();
     }
 
     /**
@@ -87,8 +88,8 @@ class Rarity {
      * @param rarity - The rarity to get the name of.
      * @returns The name of the rarity.
      */
-    public static getRarityName (rarity: ESource): string {
-        rarity = E(rarity);
+    public static getRarityName (rarity: DecimalSource): string {
+        rarity = new Decimal(rarity);
         const isExtended = rarity.gte(Rarity.rarities.length);
         if (isExtended) {
             const e = rarity.sub(Rarity.rarities.length).add(1).toRoman();
@@ -101,29 +102,29 @@ class Rarity {
     /**
      * The multiplier for the RNG. (for creating the rarity of the object)
      */
-    public rngMultiplier: E;
+    public rngMultiplier: Decimal;
 
     /**
      * The rarity index of the object.
      */
-    public rarity: E;
+    public rarity: Decimal;
 
     /**
      * The base rarity of the object, before the RNG multiplier.
      */
-    public baseRarity: E;
+    public baseRarity: Decimal;
 
     /**
      * @returns The RNG of the object.
      */
-    public get rarityRng (): E {
-        return Rarity.rarityFn(E(this.rarity));
+    public get rarityRng (): Decimal {
+        return Rarity.rarityFn(new Decimal(this.rarity));
     }
 
     /**
      * The RNG of the object.
      */
-    public rng: E;
+    public rng: Decimal;
 
     /**
      * @returns The name of the rarity.
@@ -136,9 +137,9 @@ class Rarity {
      * Creates a new rarity.
      * @param rngMultiplier - The multiplier for the RNG. (for creating the rarity of the object)
      */
-    constructor (rngMultiplier: E = E(1)) {
+    constructor (rngMultiplier: Decimal = new Decimal(1)) {
         this.rngMultiplier = rngMultiplier;
-        const baseRng = E.random().recip();
+        const baseRng = Decimal.random().recip();
         this.baseRarity = baseRng;
         const rng = rngMultiplier.mul(baseRng);
         this.rng = rng;
@@ -155,6 +156,6 @@ class Rarity {
 }
 
 // debug
-(window as any).Rarity = Rarity;
+Object.assign(window, { Rarity });
 
 export { Rarity };
