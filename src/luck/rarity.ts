@@ -2,58 +2,62 @@
  * @file Declares the rarity
  */
 // import { Game } from "../game";
-import type { DecimalSource} from "emath.js";
-import { Decimal, roundingBase } from "emath.js";
+import type { DecimalSource } from "emath.js";
+import { Decimal, roundingBase, RandomSelector } from "emath.js";
+
+/**
+ * Used to define the data for a rarity.
+ * Does not include the chance of the rarity (automatically calculated).
+ */
+export interface RarityData {
+    /**
+     * The name of the rarity.
+     */
+    name: string;
+
+    /**
+     * The class name of the rarity.
+     */
+    divClassName?: string;
+}
 
 class Rarity {
-    /**
-     * The rarities in order from most common to most rare.
-     */
-    public static rarities = [
-        "Common",
-        "Uncommon",
-        "Rare",
-        "Very Rare",
-        "Ultra Rare",
-        "Epic",
-        "Legendary",
-        "Mythical",
-        "Godlike",
-        "Transcendent",
-        "Cosmic",
-        "Celestial",
-        "Divine",
-        "Supreme",
-        "Exalted",
-        "Peerless",
-        "Grandmaster",
-        "Ethereal",
-        "Mythos",
-        "Primordial",
-        "Timeless",
-        "Infinite",
-        "Omnipotent",
-        "Ultimate",
-        "Apex",
-        "Transcendent",
-        "Ultimate",
-        "Unfathomable",
-        "Mystical",
-        "Mythos",
-        "Primordial",
-        "Omnipotent",
-        "Exalted",
-        "Eonian",
-        "Timeless",
-        "Eternal",
-        "Supreme",
-        "Cosmic",
-        "Grand",
-        "Infinite",
-        "Venerable",
-        "Enigmatic",
-        "Illustrious",
-        "Singularity",
+    public static rarities: RarityData[] = [
+        // {
+        //     name: "Common",
+        //     divClassName: "rarity-common",
+        // },
+        // Basic rarities (no class names)
+        ...[
+            "Common",
+            "Uncommon",
+            "Rare",
+            "Epic",
+            "Legendary",
+            "Mythical",
+            "Godlike",
+            "Ultimate",
+            "Transcendent",
+            "Cosmic",
+            "Celestial",
+            "Divine",
+            "Mystical",
+            "Supreme",
+            "Exalted",
+            "Ethereal",
+            "Unfathomable",
+            "Mythos",
+            "Apex",
+            "Timeless",
+            "Primordial",
+            "Eonian",
+            "Eternal",
+            "Venerable",
+            "Enigmatic",
+            "Illustrious",
+            "Singularity",
+            "Infinite",
+        ].map((name): RarityData => ({ name })),
     ];
 
     /**
@@ -61,10 +65,8 @@ class Rarity {
      * @param rarity - The rarity to get the probability of. (inverse)
      * @returns The probability of getting the rarity.
      */
-    public static rarityFn (rarity: Decimal): Decimal {
+    public static rarityFn(rarity: Decimal): Decimal {
         // TODO: Create a better formula for this.
-        // return rarity.add(1).pow(5);
-        // return Decimal.pow(5, rarity.add(1));
         return roundingBase(Decimal.pow(5, rarity.div(7.5).add(1).pow(3)).sub(4), 10, 1, 1e3);
     }
 
@@ -73,36 +75,64 @@ class Rarity {
      * @param probability - The probability to get the rarity of. (inverse)
      * @returns The rarity of the probability.
      */
-    public static rarityFnInverse (probability: Decimal): Decimal {
-        // return probability.root(5).sub(1);
-        // return Decimal.log(5, probability.add(1)).sub(1);
-        // return probability.ln().div(Decimal.ln(5));
-        // return probability.log(5);
-        // return inverseFunctionApprox(Rarity.rarityFn, probability).value.round();
+    public static rarityFnInverse(probability: Decimal): Decimal {
         // 7.5\sqrt[3]{\frac{\ln(x+5)}{\ln(5)}}-7.5
-        return new Decimal(7.5).mul(probability.add(5).ln().div(Decimal.ln(5)).root(3)).sub(7.5).floor();
+        return new Decimal(7.5)
+            .mul(probability.add(5).ln().div(Decimal.ln(5)).root(3))
+            .sub(7.5)
+            .floor();
     }
 
     /**
-     * Gets the name of a rarity.
+     * Gets the data of a rarity.
      * @param rarity - The rarity to get the name of.
-     * @returns The name of the rarity.
+     * @returns The data of the rarity.
      */
-    public static getRarityName (rarity: DecimalSource): string {
+    public static getRarityData(rarity: DecimalSource): RarityData {
         rarity = new Decimal(rarity);
+
+        // If the rarity is greater than the number of defined rarities, extend it with a Roman numeral.
         const isExtended = rarity.gte(Rarity.rarities.length);
         if (isExtended) {
             const e = rarity.sub(Rarity.rarities.length).add(1).toRoman();
             const ext = typeof e === "string" ? `(${e})` : "(???)";
-            return `${Rarity.rarities[Rarity.rarities.length - 1]} ${ext}`;
+
+            return {
+                ...Rarity.rarities[Rarity.rarities.length - 1],
+                name: `${Rarity.rarities[Rarity.rarities.length - 1].name} ${ext}`,
+            };
         }
+
         return Rarity.rarities[Math.floor(rarity.toNumber())];
     }
 
     /**
-     * The multiplier for the RNG. (for creating the rarity of the object)
+     * Gets the value of a rarity.
+     * @param rarity - The rarity to get the value of.
+     * @returns The value of the rarity.
      */
-    public rngMultiplier: Decimal;
+    public static getValue(rarity: Decimal): Decimal {
+        return Rarity.rarityFn(rarity).pow(0.75);
+    }
+
+    /**
+     * The selector for the rarities.
+     */
+    public static selector = new RandomSelector(
+        Rarity.rarities.map((rarity, index) => ({
+            name: rarity.name,
+            chance: Rarity.rarityFn(new Decimal(index)),
+        })),
+    );
+
+    /**
+     * Gets a random rarity based on the given luck.
+     * @param luck - The luck to use for the random selection.
+     * @returns The random rarity.
+     */
+    public static getRandomRarity(luck: DecimalSource = Decimal.dOne): Rarity {
+        return new Rarity(Rarity.selector.select(luck) ?? Rarity.rarities[0].name);
+    }
 
     /**
      * The rarity index of the object.
@@ -110,49 +140,38 @@ class Rarity {
     public rarity: Decimal;
 
     /**
-     * The base rarity of the object, before the RNG multiplier.
+     * @returns The value of the rarity.
      */
-    public baseRarity: Decimal;
+    public get value(): Decimal {
+        return Rarity.getValue(this.rarity);
+    }
 
     /**
      * @returns The RNG of the object.
      */
-    public get rarityRng (): Decimal {
+    public get rarityRng(): Decimal {
         return Rarity.rarityFn(new Decimal(this.rarity));
     }
 
     /**
-     * The RNG of the object.
+     * @returns The data of the rarity.
      */
-    public rng: Decimal;
-
-    /**
-     * @returns The name of the rarity.
-     */
-    public get rarityName (): string {
-        return Rarity.getRarityName(this.rarity);
+    public get rarityData(): RarityData {
+        return Rarity.getRarityData(this.rarity);
     }
 
     /**
      * Creates a new rarity.
-     * @param rngMultiplier - The multiplier for the RNG. (for creating the rarity of the object)
+     * @param name - The name of the rarity.
      */
-    constructor (rngMultiplier: Decimal = new Decimal(1)) {
-        this.rngMultiplier = rngMultiplier;
-        const baseRng = Decimal.random().recip();
-        this.baseRarity = baseRng;
-        const rng = rngMultiplier.mul(baseRng);
-        this.rng = rng;
-        this.rarity = Rarity.rarityFnInverse(rng);
+    constructor(name: string) {
+        const index = Rarity.rarities.findIndex((rarity) => rarity.name === name);
+        if (index === -1) {
+            throw new Error(`Rarity "${name}" not found.`);
+        }
+
+        this.rarity = new Decimal(index);
     }
-
-    // public toJSON () {
-    //     return {
-    //         rarity: this.rarity.toString(),
-    //         rngMultiplier: this.rngMultiplier.toString(),
-    //     };
-    // }
-
 }
 
 // debug

@@ -7,3 +7,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom rarity styles */
+.rarity-base { 
+    @apply h-40 aspect-square p-2 border-4 border-gray-300 rounded-lg shadow-sm bg-white relative hover:shadow-xl transition-shadow duration-200 ease-in-out;
+}
+
+/* .rarity-common {
+    @apply border-indigo-900;
+} */

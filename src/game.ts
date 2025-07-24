@@ -1,18 +1,24 @@
 /**
- * @file Declares the game class.
+ * @file Declares the main game class.
  */
 import { Game as GameClass } from "emath.js/game";
 
-const Game = new GameClass({
+/**
+ * The main game instance for the E-Minigames.
+ * Used for all minigames.
+ */
+export const Game = new GameClass({
     mode: "development",
     name: {
         id: "e-minigames",
-        title: "Decimal-Minigames",
+        title: "E-Minigames",
     },
 });
 
+// Expose the game instance and emath.js modules in development mode for debugging
 if (Game.config.mode === "development") {
     Object.assign(window, { Game });
+
     void (async (): Promise<void> => {
         const keysToLoad = {
             eMath: await import("emath.js"),
@@ -23,5 +29,3 @@ if (Game.config.mode === "development") {
         Object.assign(window, keysToLoad);
     })();
 }
-
-export { Game };

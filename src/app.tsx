@@ -3,24 +3,37 @@
  */
 import React from "react";
 
-import "./game";
-import "./luck/luckMain";
-import LuckMain from "./luck/luckMain";
+import { Game } from "./game";
+import "./luck/luckMinigame";
+import { LuckMain } from "./luck/luckMain";
+
+Game.dataManager.init();
+Game.dataManager.loadData();
+
+// Save on exit
+window.addEventListener("beforeunload", function (e) {
+    Game.dataManager.saveData();
+});
+
+Game.eventManager.setEvent("save", "interval", 30e3, () => {
+    Game.dataManager.saveData();
+    console.log("Auto save complete.");
+});
 
 /**
  * @returns The main app component.
  */
-const App: React.FC = () => {
+export const App: React.FC = () => {
     return (
-        <div style={{
-            margin: "2%",
-        }}>
+        <div className="m-4">
             <h1>E Minigames</h1>
-            A collection of minigames for my library <a href="https://github.com/xshadowblade/emath.js">emath.js</a>.
+            <p>
+                A collection of minigames for my library
+                <a href="https://github.com/xshadowblade/emath.js">emath.js</a>.
+            </p>
             <hr />
+
             <LuckMain />
         </div>
     );
 };
-
-export default App;
