@@ -2,6 +2,7 @@
  * @file Declares the rarity
  */
 // import { Game } from "../game";
+import React, { useState } from "react";
 import type { DecimalSource } from "emath.js";
 import { Decimal, roundingBase, RandomSelector } from "emath.js";
 
@@ -19,7 +20,53 @@ export interface RarityData {
      * The class name of the rarity.
      */
     divClassName?: string;
+
+    /**
+     * Optional children to render inside the rarity display.
+     */
+    children?: React.ReactNode;
 }
+
+interface RaritySquareEffectProps {
+    /***
+     * How much to vary the position of the square effect.
+     */
+    positionOffsetVariation?: number;
+
+    /**
+     * How often to update the position offset in milliseconds.
+     */
+    updateInterval?: number;
+
+    /**
+     * Optional class name for the square effect.
+     */
+    className?: string;
+}
+
+const RaritySquareEffect: React.FC<RaritySquareEffectProps> = (props) => {
+    const { positionOffsetVariation = 2, updateInterval = 100, className = "square-effect" } = props;
+
+    const [positionOffsetX, setPositionOffsetX] = useState(0);
+    const [positionOffsetY, setPositionOffsetY] = useState(0);
+
+    // Update the position offset every 100ms
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setPositionOffsetX(Math.random() * positionOffsetVariation - positionOffsetVariation / 2);
+            setPositionOffsetY(Math.random() * positionOffsetVariation - positionOffsetVariation / 2);
+        }, updateInterval);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div
+            className={className}
+            style={{ "--x-offset": `${positionOffsetX}%`, "--y-offset": `${positionOffsetY}%` } as React.CSSProperties}
+        ></div>
+    );
+};
 
 class Rarity {
     public static rarities: RarityData[] = [
@@ -56,8 +103,21 @@ class Rarity {
             "Enigmatic",
             "Illustrious",
             "Singularity",
-            "Infinite",
         ].map((name): RarityData => ({ name })),
+        {
+            name: "Infinite",
+            divClassName: "rarity-infinite",
+            children: (
+                <>
+                    <RaritySquareEffect />
+                    <RaritySquareEffect updateInterval={150} className="square-effect square-effect-border" />
+                    <div className="rarity-infinite-orbital"></div>
+                    <div className="rarity-infinite-orbital rarity-infinite-orbital-1"></div>
+                    <div className="rarity-infinite-orbital rarity-infinite-orbital-2"></div>
+                </>
+            ),
+        },
+        { name: "placeholder " },
     ];
 
     /**
