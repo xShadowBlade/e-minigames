@@ -14,9 +14,11 @@ export const RarityDisplay: React.FC<{ rarity: Rarity; count: Decimal }> = (prop
 
     return (
         // Use the given class name if provided, otherwise use a default class name.
-        <div className={`rarity-base ${rarity.rarityData.divClassName ?? ""}`}>
+        <div
+            className={`relative aspect-square h-40 rounded-lg border-4 border-gray-300 bg-white p-2 shadow-sm transition-shadow duration-200 ease-in-out hover:shadow-xl ${rarity.rarityData.divClassName ?? ""}`}
+        >
             <h1 className="mb-2 text-lg font-bold">{rarity.rarityData.name}</h1>
-            <h1 className="absolute right-2 top-2 text-lg font-bold">({rarity.rarity.floor().format(0)})</h1>
+            <h1 className="absolute right-2 top-2 text-lg font-bold">({rarity.rarity.formatInteger()})</h1>
 
             <p className="mb-1 text-gray-500">Chance: 1 in {rarity.rarityRng.format()}</p>
             <p className="mb-1 text-gray-500">Value: {rarity.value.format()}</p>

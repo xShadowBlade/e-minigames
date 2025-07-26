@@ -20,13 +20,13 @@
 }
 
 /* Custom rarity styles */
-.rarity-base { 
+/* .rarity-base { 
     @apply h-40 aspect-square p-2 border-4 border-gray-300 rounded-lg shadow-sm bg-white relative hover:shadow-xl transition-shadow duration-200 ease-in-out;
-}
-
-/* .rarity-common {
-    @apply border-indigo-900;
 } */
+
+.rarity-outside-glow {
+    box-shadow: 0px 0px 10px var(--tw-shadow-color);
+}
 
 @keyframes rarity-infinite-animation {
     0% {
@@ -47,11 +47,11 @@
     animation: rarity-infinite-animation 2.5s ease-in-out infinite alternate;
 }
 
-.rarity-infinite > p {
+.rarity-infinite > p, .rarity-singularity > p {
     @apply text-gray-300 shadow-md font-bold hover:text-gray-200 transition-colors duration-200 ease-in-out z-0;
 }
 
-.rarity-infinite > h1 {
+.rarity-infinite > h1, .rarity-singularity > h1 {
     @apply text-gray-200 text-sm font-bold hover:text-gray-100 transition-colors duration-200 ease-in-out z-0;
 }
 
@@ -93,18 +93,24 @@
     animation: rotate-infinite 1.5s linear infinite;
 }
 
+.rarity-singularity {
+    @apply text-space-mono text-sm from-black to-slate-600 bg-gradient-to-r;
+
+    background-image: radial-gradient(circle at center, var(--tw-gradient-stops));
+}
+
 @keyframes pulse {
     0% {
         @apply opacity-50;
-        box-shadow: 0px 0px 12px black;
+        box-shadow: 0px 0px 2rem var(--tw-shadow-color);
     }
     50% {
         @apply opacity-40;
-        box-shadow: 0px 0px 14px black;
+        box-shadow: 0px 0px 1.75rem var(--tw-shadow-color);
     }
     100% {
         @apply opacity-50;
-        box-shadow: 0px 0px 12px black;
+        box-shadow: 0px 0px 2rem var(--tw-shadow-color);
     }    
 }
 
@@ -118,9 +124,8 @@
     animation: pulse 0.2s ease-in-out infinite;
 }
 
-
 .square-effect-border {
-    @apply bg-transparent h-[95%] rounded-lg;
-    border-color: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+    @apply bg-transparent h-[95%] rounded-lg border-4 border-solid;
+    border-image: linear-gradient(to right, var(--tw-gradient-stops)) 1;
     transform: translate(calc(-50% + var(--x-offset)), calc(-50% + var(--y-offset)));
 }

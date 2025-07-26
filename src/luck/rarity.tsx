@@ -70,19 +70,42 @@ const RaritySquareEffect: React.FC<RaritySquareEffectProps> = (props) => {
 
 class Rarity {
     public static rarities: RarityData[] = [
-        // {
-        //     name: "Common",
-        //     divClassName: "rarity-common",
-        // },
+        {
+            name: "Common",
+            divClassName: "bg-gradient-to-r from-gray-100 to-gray-200",
+        },
+        {
+            name: "Uncommon",
+            divClassName: "bg-gradient-to-r from-green-100 to-green-200 border-green-300",
+        },
+        {
+            name: "Rare",
+            divClassName: "bg-gradient-to-r from-blue-100 to-blue-200 border-blue-400",
+        },
+        {
+            name: "Epic",
+            divClassName: "bg-gradient-to-r from-purple-100 to-purple-200 border-purple-300",
+        },
+        {
+            name: "Legendary",
+            divClassName: "bg-gradient-to-r from-yellow-100 to-yellow-200 border-yellow-300",
+        },
+        {
+            name: "Mythical",
+            divClassName: "bg-gradient-to-r from-pink-100 to-pink-200 border-pink-300",
+        },
+        {
+            name: "Godlike",
+            divClassName:
+                "bg-gradient-to-r from-cyan-100 to-cyan-200 border-cyan-300",
+        },
         // Basic rarities (no class names)
         ...[
-            "Common",
-            "Uncommon",
-            "Rare",
-            "Epic",
-            "Legendary",
-            "Mythical",
-            "Godlike",
+            // "Rare",
+            // "Epic",
+            // "Legendary",
+            // "Mythical",
+            // "Godlike",
             "Ultimate",
             "Transcendent",
             "Cosmic",
@@ -102,15 +125,24 @@ class Rarity {
             "Venerable",
             "Enigmatic",
             "Illustrious",
-            "Singularity",
+            // "Singularity",
         ].map((name): RarityData => ({ name })),
+        {
+            name: "Singularity",
+            divClassName: "rarity-singularity",
+            children: (
+                <>
+                    {/* <RaritySquareEffect positionOffsetVariation={4} updateInterval={100} className="square-effect square-effect-border from-orange-600 to-orange-500 shadow-orange-800 !h-[120%] !rounded-3xl" /> */}
+                </>
+            ),
+        },
         {
             name: "Infinite",
             divClassName: "rarity-infinite",
             children: (
                 <>
                     <RaritySquareEffect />
-                    <RaritySquareEffect updateInterval={150} className="square-effect square-effect-border" />
+                    <RaritySquareEffect updateInterval={150} className="square-effect square-effect-border shadow-black" />
                     <div className="rarity-infinite-orbital"></div>
                     <div className="rarity-infinite-orbital rarity-infinite-orbital-1"></div>
                     <div className="rarity-infinite-orbital rarity-infinite-orbital-2"></div>
@@ -226,8 +258,12 @@ class Rarity {
      */
     constructor(name: string) {
         const index = Rarity.rarities.findIndex((rarity) => rarity.name === name);
+
+        // If the rarity is not found, return the default rarity.
         if (index === -1) {
-            throw new Error(`Rarity "${name}" not found.`);
+            console.warn(`Rarity "${name}" not found.`);
+            this.rarity = new Decimal(0);
+            return;
         }
 
         this.rarity = new Decimal(index);
