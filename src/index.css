@@ -10,6 +10,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    @apply overflow-hidden
+}
+
 /* Fonts */
 .text-pixelify-sans {
     font-family: "Pixelify Sans", sans-serif;
@@ -20,6 +24,11 @@
 }
 
 /* Custom rarity styles */
+
+button {
+    @apply text-space-mono text-sm bg-gradient-to-r m-2 p-2 rounded-lg border-2 border-zinc-500 text-gray-200 hover:bg-gradient-to-r from-slate-700 to-slate-900 transition-colors duration-200 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-opacity-50;
+}
+
 /* .rarity-base { 
     @apply h-40 aspect-square p-2 border-4 border-gray-300 rounded-lg shadow-sm bg-white relative hover:shadow-xl transition-shadow duration-200 ease-in-out;
 } */

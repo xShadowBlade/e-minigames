@@ -8,6 +8,7 @@ import { Rarity } from "./rarity";
 import { RarityDisplay } from "./RarityDisplay";
 import { Inventory } from "./Inventory";
 import { luckCoins, luckInventory, updateInventory } from "./luckMinigame";
+import { RarityOpenAnimation } from "./opening/RarityOpenAnimation";
 
 /**
  * The main component for the Luck minigame.
@@ -15,6 +16,8 @@ import { luckCoins, luckInventory, updateInventory } from "./luckMinigame";
  */
 export const LuckMain: React.FC = () => {
     const [pressCount, setPressCount] = useState<number>(0);
+
+    const [isOpeningAnimation, setIsOpeningAnimation] = useState<boolean>(false);
 
     /**
      * Rolls a rarity and updates the inventory.
@@ -46,7 +49,29 @@ export const LuckMain: React.FC = () => {
             <button onClick={() => rollRarityAndUpdateInventory(1, 1)}>Roll Rarity</button>
 
             <button onClick={() => rollRarityAndUpdateInventory(1, 1000)}>Roll x1000 luck</button>
+            <button onClick={() => setIsOpeningAnimation(true)}>open</button>
+            <hr className="my-4 border-gray-300" />
             <Inventory />
+
+            {isOpeningAnimation && (
+                <>
+                    <RarityOpenAnimation
+                        afterChildren={
+                            <>
+                                {/* <div className="rarity-open-shockwave border-slate-400 shadow-slate-200"></div> */}
+                                <div className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 transform items-center justify-center">
+                                    <RarityDisplay rarity={new Rarity("Infinite")} count={new Decimal(1)} />
+                                </div>
+                            </>
+                        }
+                    >
+                        <div className="rarity-open-orb from-neutral-100 to-neutral-400 shadow-white"></div>
+                        <div className="rarity-open-orb rarity-open-orb-left from-neutral-100 to-neutral-400 shadow-white"></div>
+                        <div className="rarity-open-orb rarity-open-orb-top from-neutral-100 to-neutral-400 shadow-white"></div>
+                        <div className="rarity-open-orb rarity-open-orb-bottom from-neutral-100 to-neutral-400 shadow-white"></div>
+                    </RarityOpenAnimation>
+                </>
+            )}
         </>
     );
 
