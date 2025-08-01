@@ -25,6 +25,11 @@ export interface RarityData {
      * Optional children to render inside the rarity display.
      */
     children?: React.ReactNode;
+
+    /**
+     * What to display when the rarity is opened.
+     */
+    openAnimation?: React.ReactNode;
 }
 
 interface RaritySquareEffectProps {

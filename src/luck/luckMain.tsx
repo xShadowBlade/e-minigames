@@ -8,7 +8,7 @@ import { Rarity } from "./rarity";
 import { RarityDisplay } from "./RarityDisplay";
 import { Inventory } from "./Inventory";
 import { luckCoins, luckInventory, updateInventory } from "./luckMinigame";
-import { RarityOpenAnimation } from "./opening/RarityOpenAnimation";
+import { RarityOpenAnimation, RarityOpenAnimationOrbs } from "./opening/RarityOpenAnimation";
 
 /**
  * The main component for the Luck minigame.
@@ -65,10 +65,19 @@ export const LuckMain: React.FC = () => {
                             </>
                         }
                     >
-                        <div className="rarity-open-orb from-neutral-100 to-neutral-400 shadow-white"></div>
+                        {/* <div className="rarity-open-orb bg-black shadow-white"></div>
                         <div className="rarity-open-orb rarity-open-orb-left from-neutral-100 to-neutral-400 shadow-white"></div>
                         <div className="rarity-open-orb rarity-open-orb-top from-neutral-100 to-neutral-400 shadow-white"></div>
-                        <div className="rarity-open-orb rarity-open-orb-bottom from-neutral-100 to-neutral-400 shadow-white"></div>
+                        <div className="rarity-open-orb rarity-open-orb-bottom from-neutral-100 to-neutral-400 shadow-white"></div> */}
+                        {/* <RarityOpenAnimationOrbs
+                            numberOfOrbs={10}
+                            className="bg-gradient-radial from-neutral-600 to-neutral-900 shadow-white"
+                            distanceFromCenter={40}
+                        /> */}
+                        <RarityOpenAnimationOrbs
+                            numberOfOrbs={8}
+                            className="bg-black shadow-white"
+                        />
                     </RarityOpenAnimation>
                 </>
             )}

@@ -18,14 +18,15 @@
 
 @keyframes spiral-in {
     0% {
-        transform: rotate(var(--animation-initial-rotate)) translateX(var(--animation-initial-translate)) scale(var(--animation-initial-scale));
+        /* transform: rotate(var(--animation-initial-rotate)) translateX(var(--animation-initial-translate)) scale(var(--animation-initial-scale)); */
+        transform: rotate(var(--animation-initial-rotate)) translate(var(--animation-initial-translate)) scale(var(--animation-initial-scale));
     }
     100% {
         transform: rotate(var(--animation-final-rotate)) translateX(var(--animation-final-translate)) scale(var(--animation-final-scale));
     }
 }
 
-@keyframes spiral-in-left {
+/* @keyframes spiral-in-left {
     0% {
         transform: rotate(var(--animation-initial-rotate)) translateX(calc(-1 * var(--animation-initial-translate))) scale(var(--animation-initial-scale));
     }
@@ -50,29 +51,30 @@
     100% {
         transform: rotate(var(--animation-final-rotate)) translateY(calc(-1 * var(--animation-final-translate))) scale(var(--animation-final-scale));
     }
-}
+} */
 
 .rarity-open-orb {
     @apply absolute aspect-square rounded-full h-12 top-1/2 left-1/2;
 
     z-index: 51;
-    /* background-color: radial-gradient(var(--tw-gradient-stops)); */
-    background-color: white;
     box-shadow: 0 0 2rem var(--tw-shadow-color);
+    /* Makes orbs blend instead of appearing on top of each other */
+    mix-blend-mode: screen;
 
     --animation-initial-scale: 1;
-    --animation-initial-translate: 40vh;
+    --animation-initial-translate-distance: 40vh;
+    --animation-initial-translate: calc(var(--animation-initial-translate-distance))vh 0;
     --animation-initial-rotate: 0deg;
 
     --animation-final-scale: 5;
     --animation-final-translate: 0vh;
     --animation-final-rotate: 3600deg;
 
-    animation: spiral-in 10s cubic-bezier(.9,0,.8,1) forwards;
+    animation: spiral-in 9.65s cubic-bezier(.9,0,.8,1) forwards;
     transform-origin: center center;
 }
 
-.rarity-open-orb-left {
+/* .rarity-open-orb-left {
     animation-name: spiral-in-left;
 }
 
@@ -82,7 +84,7 @@
 
 .rarity-open-orb-bottom {
     animation-name: spiral-in-bottom;
-}
+} */
 
 .rarity-open-animation-after {
     @apply absolute left-0 top-0 z-50 h-screen w-screen overflow-hidden bg-black bg-opacity-50;
