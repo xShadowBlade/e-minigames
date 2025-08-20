@@ -1,14 +1,42 @@
 /**
  * @file Declares cards
  */
-import React from "react";
-import type { Player } from "./player";
+import type React from "react";
+import { PlayerAction, type Player } from "./player";
+import { Decimal } from "emath.js";
+
+/**
+ * The type of card.
+ * Currently, this is cosmetic.
+ */
+export enum CardType {
+    /**
+     * An action card that can be used to perform an action.
+     */
+    Action,
+
+    /**
+     * A passive card that affects the player or game state.
+     */
+    Passive,
+}
 
 interface CardConstructorData {
     /**
      * The name/id of the card.
      */
     name: string;
+
+    /**
+     * The type of the card.
+     * This is currently cosmetic.
+     */
+    type?: CardType;
+
+    /**
+     * A brief description of the card.
+     */
+    description?: string;
 
     /**
      * Components to render inside the card (on top of the existing card).
@@ -32,13 +60,50 @@ export class Card {
      * The list of all cards.
      */
     public static readonly listOfCards: Card[] = [
+        // Actions
         new Card({
-            name: "Black Hole",
+            name: "Attack",
+            description: "Deal damage to the opponent.",
+            type: CardType.Action,
             effect: (player: Player): void => {
-                player.attackBoost.setBoost({
-                    id: "card-black-hole-attack",
-                    value: (input) => input.multiply(2),
-                    order: 2,
+                player.addAction(
+                    new PlayerAction({
+                        name: "Attack",
+                        description: "Deal damage to the opponent.",
+                        execute: (playerPerforming: Player, targetPlayer: Player): void => {
+                            targetPlayer.hp = targetPlayer.hp.sub(playerPerforming.getStrength());
+                        },
+                    }),
+                );
+            },
+        }),
+
+        new Card({
+            name: "ice dagger but crueler",
+            description: "cold",
+            type: CardType.Action,
+            effect: (player: Player): void => {
+                player.addAction(
+                    new PlayerAction({
+                        name: "ice dagger but crueler",
+                        description: "cold",
+                        execute: (playerPerforming: Player, targetPlayer: Player): void => {
+                            targetPlayer.hp = Decimal.random(0, targetPlayer.hp).round();
+                        },
+                    }),
+                );
+            },
+        }),
+
+        new Card({
+            name: "Mistake",
+            description: "best card in the game",
+            type: CardType.Passive,
+            effect: (player: Player): void => {
+                player.strengthBoost.setBoost({
+                    id: "card-black-hole-strength",
+                    value: (input) => input.add("-1e300"),
+                    order: 1,
                 });
             },
         }),

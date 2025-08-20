@@ -6,6 +6,7 @@ import React from "react";
 import { Game } from "./game";
 import "./luck/luckMinigame";
 import { LuckMain } from "./luck/luckMain";
+import { Rpg } from "./rpg/Rpg";
 
 Game.dataManager.init();
 Game.dataManager.loadData();
@@ -29,6 +30,8 @@ export const App: React.FC = () => {
             <h1 className="mb-4 text-3xl font-bold">E Minigames</h1>
 
             <LuckMain />
+
+            <Rpg />
         </div>
     );
 };
