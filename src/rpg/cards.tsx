@@ -28,10 +28,9 @@ interface CardConstructorData {
     name: string;
 
     /**
-     * The type of the card.
-     * This is currently cosmetic.
+     * The type of the card. See {@link CardType} for the available types.
      */
-    type?: CardType;
+    type: CardType;
 
     /**
      * A brief description of the card.
@@ -63,13 +62,14 @@ export class Card {
         // Actions
         new Card({
             name: "Attack",
-            description: "Deal damage to the opponent.",
+            description: "Perform an attack on the opponent.",
             type: CardType.Action,
             effect: (player: Player): void => {
                 player.addAction(
                     new PlayerAction({
                         name: "Attack",
-                        description: "Deal damage to the opponent.",
+                        description: "Deal damage to the opponent equal to your strength.",
+                        requiresTarget: true,
                         execute: (playerPerforming: Player, targetPlayer: Player): void => {
                             targetPlayer.hp = targetPlayer.hp.sub(playerPerforming.getStrength());
                         },
@@ -87,8 +87,12 @@ export class Card {
                     new PlayerAction({
                         name: "ice dagger but crueler",
                         description: "cold",
+                        requiresTarget: true,
                         execute: (playerPerforming: Player, targetPlayer: Player): void => {
-                            targetPlayer.hp = Decimal.random(0, targetPlayer.hp).round();
+                            targetPlayer.hp = Decimal.random(
+                                0,
+                                targetPlayer.hp.sub(playerPerforming.getStrength()),
+                            ).round();
                         },
                     }),
                 );

@@ -1,7 +1,8 @@
 /**
  * @file Declares a player.
  */
-import { Boost, Decimal } from "emath.js";
+import type { Decimal } from "emath.js";
+import { Boost } from "emath.js";
 import type { Card } from "./cards";
 import type { Battle } from "./battle";
 
@@ -20,11 +21,24 @@ export interface PlayerActionConstructorData {
     description: string;
 
     /**
+     * Optional class name to append to the action button.
+     */
+    className?: string;
+
+    /**
+     * Whether the action requires a target player.
+     * - If true, the action will be performed on the target player (after a choice is made).
+     * - If false, the action will be performed on the player itself.
+     * @default false
+     */
+    requiresTarget?: boolean;
+
+    /**
      * The function to execute when the action is performed.
      * @param player - The player performing the action.
      * @param targetPlayer - The target player of the action. (note: can be itself)
      */
-    execute: (playerPerforming: Player, targetPlayer: Player) => void;
+    execute: (playerPerforming: Player, targetPlayer: Player) => void | Promise<void>;
 }
 
 /**
@@ -49,12 +63,12 @@ interface OutgoingAttackConstructorData {
     /**
      * The player that is performing the attack.
      */
-    player: Player;
+    playerPerforming: Player;
 
     /**
      * The target player of the attack.
      */
-    target: Player;
+    targetPlayer: Player;
 
     /**
      * The corresponding action that triggered this attack.
@@ -123,8 +137,25 @@ export class Player {
 
     /**
      * The current hp.
+     * Access using {@link hp}.
+     * Hp cannot go above max (but can go below 0)
      */
-    public hp: Decimal = this.getMaxHp();
+    private _hp: Decimal = this.getMaxHp();
+
+    /**
+     * @returns The player's current hp value.
+     */
+    public get hp(): Decimal {
+        return this._hp;
+    }
+
+    /**
+     * Sets the player's current hp value and clamps it to the maximum hp.
+     * @param value - The new hp value.
+     */
+    public set hp(value: Decimal) {
+        this._hp = value.min(this.getMaxHp());
+    }
 
     /**
      * The name of the player.
@@ -190,7 +221,7 @@ export class Player {
         // Reset boosts
         this.strengthBoost.clearBoosts();
         this.hpBoost.clearBoosts();
-        this.hp = this.getMaxHp();
+        this._hp = this.getMaxHp();
 
         // Run card effects to apply boosts
         this.runCardEffects();
