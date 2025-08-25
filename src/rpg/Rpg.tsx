@@ -7,6 +7,7 @@ import { Card } from "./cards";
 import { Battle } from "./battle";
 import { Game } from "../game";
 import { BattleMenu } from "./gui/BattleMenu";
+import { GameStateProvider } from "./RpgGameState";
 
 // debug
 const testPlayer = new Player("test player");
@@ -15,11 +16,16 @@ testPlayer.resetPlayerBeforeBattle();
 
 Object.assign(window, { Player, Card, Battle, testPlayer });
 
+/**
+ * @returns A simple RPG game component.
+ */
 export const Rpg: React.FC = () => {
     return (
-        <div>
-            <h1>RPG Game</h1>
-            <BattleMenu isOpen={true} actions={testPlayer.actions.map((action) => action.data)} />
-        </div>
+        <GameStateProvider>
+            <div>
+                <h1>RPG Game</h1>
+                <BattleMenu isOpen={true} actions={testPlayer.actions.map((action) => action.data)} />
+            </div>
+        </GameStateProvider>
     );
-}
+};
