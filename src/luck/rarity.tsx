@@ -101,8 +101,7 @@ class Rarity {
         },
         {
             name: "Godlike",
-            divClassName:
-                "bg-gradient-to-r from-cyan-100 to-cyan-200 border-cyan-300",
+            divClassName: "bg-gradient-to-r from-cyan-100 to-cyan-200 border-cyan-300",
         },
         // Basic rarities (no class names)
         ...[
@@ -163,8 +162,7 @@ class Rarity {
      * @returns The probability of getting the rarity.
      */
     public static rarityFn(rarity: Decimal): Decimal {
-        // TODO: Create a better formula for this.
-        return roundingBase(Decimal.pow(5, rarity.div(7.5).add(1).pow(3)).sub(4), 10, 1, 1e3);
+        return roundingBase(Decimal.pow(1.75, rarity.add(1).pow(1.25)), 10, 1, 1e3);
     }
 
     /**
@@ -172,13 +170,13 @@ class Rarity {
      * @param probability - The probability to get the rarity of. (inverse)
      * @returns The rarity of the probability.
      */
-    public static rarityFnInverse(probability: Decimal): Decimal {
-        // 7.5\sqrt[3]{\frac{\ln(x+5)}{\ln(5)}}-7.5
-        return new Decimal(7.5)
-            .mul(probability.add(5).ln().div(Decimal.ln(5)).root(3))
-            .sub(7.5)
-            .floor();
-    }
+    // public static rarityFnInverse(probability: Decimal): Decimal {
+    //     // 7.5\sqrt[3]{\frac{\ln(x+5)}{\ln(5)}}-7.5
+    //     return new Decimal(7.5)
+    //         .mul(probability.add(5).ln().div(Decimal.ln(5)).root(3))
+    //         .sub(7.5)
+    //         .floor();
+    // }
 
     /**
      * Gets the data of a rarity.

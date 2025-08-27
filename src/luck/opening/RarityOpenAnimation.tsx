@@ -64,6 +64,11 @@ interface RarityOpenAnimationProps {
      * Any children that should be rendered after the animation.
      */
     afterChildren?: React.ReactNode;
+
+    /**
+     * An event listener that is called when the screen is clicked.
+     */
+    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 /**
@@ -72,13 +77,14 @@ interface RarityOpenAnimationProps {
  * @param props - Props for the component.
  */
 export const RarityOpenAnimation: React.FC<RarityOpenAnimationProps> = (props) => {
-    const { children, afterChildren } = props;
+    const { children, afterChildren, onClick } = props;
 
     return (
-        <>
+        <div onClick={onClick}>
+            <div className="rarity-open-animation">{children}</div>
             <div className="rarity-open-animation">{children}</div>
 
             <div className="rarity-open-animation-after">{afterChildren}</div>
-        </>
+        </div>
     );
 };

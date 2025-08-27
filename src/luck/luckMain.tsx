@@ -51,7 +51,7 @@ export const LuckMain: React.FC = () => {
             <button onClick={() => rollRarityAndUpdateInventory(1, 1000)}>Roll x1000 luck</button>
             <button onClick={() => setIsOpeningAnimation(true)}>open</button>
             <hr className="my-4 border-gray-300" />
-            <Inventory />
+            <Inventory isVisibleOverride={!isOpeningAnimation} />
 
             {isOpeningAnimation && (
                 <>
@@ -64,6 +64,7 @@ export const LuckMain: React.FC = () => {
                                 </div>
                             </>
                         }
+                        onClick={() => setIsOpeningAnimation(false)}
                     >
                         {/* <div className="rarity-open-orb bg-black shadow-white"></div>
                         <div className="rarity-open-orb rarity-open-orb-left from-neutral-100 to-neutral-400 shadow-white"></div>
@@ -74,10 +75,7 @@ export const LuckMain: React.FC = () => {
                             className="bg-gradient-radial from-neutral-600 to-neutral-900 shadow-white"
                             distanceFromCenter={40}
                         /> */}
-                        <RarityOpenAnimationOrbs
-                            numberOfOrbs={8}
-                            className="bg-black shadow-white"
-                        />
+                        <RarityOpenAnimationOrbs numberOfOrbs={8} className="bg-black shadow-white" />
                     </RarityOpenAnimation>
                 </>
             )}

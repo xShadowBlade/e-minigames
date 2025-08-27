@@ -29,9 +29,9 @@ export const App: React.FC = () => {
         <div className="m-4">
             <h1 className="mb-4 text-3xl font-bold">E Minigames</h1>
 
-            {/* <LuckMain /> */}
+            <LuckMain />
 
-            <Rpg />
+            {/* <Rpg /> */}
         </div>
     );
 };

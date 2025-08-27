@@ -10,9 +10,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* body {
     @apply overflow-hidden
-}
+} */
 
 /* Fonts */
 .text-pixelify-sans {
