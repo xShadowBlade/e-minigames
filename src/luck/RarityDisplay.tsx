@@ -17,12 +17,18 @@ export const RarityDisplay: React.FC<{ rarity: Rarity; count: Decimal }> = (prop
         <div
             className={`relative aspect-square h-40 rounded-lg border-4 border-gray-300 bg-white p-2 shadow-sm transition-shadow duration-200 ease-in-out hover:shadow-xl ${rarity.rarityData.divClassName ?? ""}`}
         >
-            <h1 className="mb-2 text-lg font-bold">{rarity.rarityData.name}</h1>
-            <h1 className="absolute right-2 top-2 text-lg font-bold">({rarity.rarity.formatInteger()})</h1>
+            {/* Title and index */}
+            <h1 className="mb-2 text-lg font-bold">{rarity.toString()}</h1>
+            <h1 className="absolute right-2 top-2 text-lg font-bold">
+                ({rarity.modifier.gt(0) ? `${rarity.modifier.formatInteger()}-` : ""}
+                {rarity.rarity.formatInteger()})
+            </h1>
 
-            <p className="mb-1 text-gray-500">Chance: 1 in {rarity.rarityRng.format()}</p>
+            {/* Rarity stats */}
+            <p className="mb-1 text-gray-500">Chance: 1 in {rarity.rarityChance.format()}</p>
             <p className="mb-1 text-gray-500">Value: {rarity.value.format()}</p>
 
+            {/* Count */}
             <p className="absolute bottom-2 right-2 m-0 text-gray-500">x{count.formatInteger()}</p>
 
             {rarity.rarityData.children ?? null}

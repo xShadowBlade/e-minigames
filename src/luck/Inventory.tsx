@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import "./inventory.css";
 import { Game } from "../game";
-import { luckInventory } from "./luckMinigame";
+import { getLuckInventory } from "./luckMinigame";
 import { RarityDisplay } from "./RarityDisplay";
 import { Rarity } from "./rarity";
 
@@ -20,7 +20,7 @@ interface InventoryProps {
  * @param props - Props.
  */
 export const Inventory: React.FC<InventoryProps> = (props) => {
-    const [inventory, setInventory] = useState(luckInventory.value);
+    const [inventory, setInventory] = useState(getLuckInventory());
     const [isVisible, setIsVisible] = useState(false);
 
     return (
@@ -29,14 +29,20 @@ export const Inventory: React.FC<InventoryProps> = (props) => {
                 Inventory
             </button>
             <div className={"luck-inventory" + (isVisible && props.isVisibleOverride ? "" : " closing")}>
-                {Object.values(inventory)
-                    .sort((a, b) => -a.index.compare(b.index))
-                    .map(
-                        (item) =>
-                            item.amount.gt(0) && (
-                                <RarityDisplay key={item.name} rarity={new Rarity(item.name)} count={item.amount} />
-                            ),
-                    )}
+                {inventory
+                // TODO: add configurable sorting method
+                    // .sort((a, b) => -a.index.compare(b.index))
+                    // .sort((a, b) => a.)
+                    .map((item) => {
+                        // If the amount is 0, skip it
+                        if (item.amount.lte(0)) return;
+
+                        const correspondingRarity = Rarity.fromString(item.name);
+
+                        // If the rarity is invalid, skip it
+                        if (correspondingRarity.rarity.lt(0)) return;
+                        return <RarityDisplay key={item.name} rarity={correspondingRarity} count={item.amount} />;
+                    })}
             </div>
         </>
     );

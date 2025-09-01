@@ -82,6 +82,7 @@ export const RarityOpenAnimation: React.FC<RarityOpenAnimationProps> = (props) =
     return (
         <div onClick={onClick}>
             <div className="rarity-open-animation">{children}</div>
+            {/* TODO: why are there two instances of children */}
             <div className="rarity-open-animation">{children}</div>
 
             <div className="rarity-open-animation-after">{afterChildren}</div>
