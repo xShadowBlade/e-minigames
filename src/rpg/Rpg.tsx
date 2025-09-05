@@ -23,7 +23,6 @@ export const Rpg: React.FC = () => {
     return (
         <GameStateProvider>
             <div>
-                <h1>RPG Game</h1>
                 <BattleMenu isOpen={true} actions={testPlayer.actions.map((action) => action.data)} />
             </div>
         </GameStateProvider>

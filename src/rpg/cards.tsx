@@ -79,34 +79,13 @@ export class Card {
         }),
 
         new Card({
-            name: "ice dagger but crueler",
-            description: "cold",
-            type: CardType.Action,
-            effect: (player: Player): void => {
-                player.addAction(
-                    new PlayerAction({
-                        name: "ice dagger but crueler",
-                        description: "cold",
-                        requiresTarget: true,
-                        execute: (playerPerforming: Player, targetPlayer: Player): void => {
-                            targetPlayer.hp = Decimal.random(
-                                0,
-                                targetPlayer.hp.sub(playerPerforming.getStrength()),
-                            ).round();
-                        },
-                    }),
-                );
-            },
-        }),
-
-        new Card({
             name: "Mistake",
             description: "best card in the game",
             type: CardType.Passive,
             effect: (player: Player): void => {
                 player.strengthBoost.setBoost({
                     id: "card-black-hole-strength",
-                    value: (input) => input.add("-1e300"),
+                    value: (input) => input.add("-e6.667e1337"),
                     order: 1,
                 });
             },

@@ -2,8 +2,8 @@
  * @file Declares the RPG game state context and provider.
  */
 import React, { createContext, useContext } from "react";
-import { Player } from "./player";
-import { Battle } from "./battle";
+import type { Player } from "./player";
+import type { Battle } from "./battle";
 
 /**
  * The state of the RPG game.

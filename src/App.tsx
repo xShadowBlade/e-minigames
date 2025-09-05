@@ -27,11 +27,11 @@ Game.eventManager.setEvent("save", "interval", 30e3, () => {
 export const App: React.FC = () => {
     return (
         <div className="m-4">
-            <h1 className="mb-4 text-3xl font-bold">E Minigames</h1>
+            {/* <h1 className="mb-4 text-3xl font-bold">E Minigames</h1> */}
 
-            <LuckMain />
+            {/* <LuckMain /> */}
 
-            {/* <Rpg /> */}
+            <Rpg />
         </div>
     );
 };

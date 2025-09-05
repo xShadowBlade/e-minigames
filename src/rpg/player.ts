@@ -185,11 +185,20 @@ export class Player {
     }
 
     /**
-     * Adds a card to the player's hand.
+     * Adds a card to the player's ownership.
+     * See {@link addCards} to add multiple cards at once.
      * @param card - The card to add.
      */
     public addCard(card: Card): void {
         this.cards.push(card);
+    }
+
+    /**
+     * Adds multiple card to the player's ownership.
+     * @param cards - The cards to add.
+     */
+    public addCards(cards: Card[]): void {
+        this.cards.push(...cards);
     }
 
     /**
